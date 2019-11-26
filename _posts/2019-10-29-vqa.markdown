@@ -416,7 +416,7 @@ previous research ignore the important role of answer.
 [[45]](http://www.microsoft.com/en-us/research/wp-content/uploads/2017/06/Multi-level-Attention-Networks-for-Visual-Question-Answering.pdf) Multi-level attention networks for visual question answering     
 [[46]](https://arxiv.org/abs/1708.02071) Structured attentions for visual question answering   
 [[47]](https://arxiv.org/abs/1606.00061) Hierarchical question-image co-attention for visual question answering, NIPS2016     
-[[48]](https://arxiv.org/abs/1803.09845) Neural Baby Talk </a> a method of image captioning.    
+[[48]](https://arxiv.org/abs/1803.09845) Neural Baby Talk: a method of image captioning.    
 [[49]](https://arxiv.org/abs/1605.02697) Ask Your Neurons: A Neural-based Approach to Answering Questions about Images, ICCV15   
 [[50]](https://arxiv.org/abs/1809.03707) Answering Visual What-If Questions: From Actions to Predicted Scene Descriptions,ECCV18   
 [[51]](https://arxiv.org/abs/1703.03939) Ask Me Even More: Dynamic Memory Tensor Networks (Extended Model)    
