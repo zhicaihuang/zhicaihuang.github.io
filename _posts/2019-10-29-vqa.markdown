@@ -7,25 +7,25 @@ date:   2019-10-29 22:59:13
 mathjax: true
 ---
 
-# chapter 1 what is VQA? 
+## chapter 1 what is VQA? 
 
-## 1 what is VQA?  
+### 1 what is VQA?  
 VQA is abbreviate of Visual question answering, which given a picture and realtive questions, the VQA system will get an answer under these conditions. VQA is a reasearch field of Visual Understanding.  
 
-## 2 What is the solution to VQA?  
+### 2 What is the solution to VQA?  
 The vqa is a multimodal learning problem[[41]](#41). it can considerate as classification task, as the following image showing [[42]](#42), which the input is image and relative question, the output is answer. While extracting the image and question features, the vital in vqa is how to map them to a common feature space. The emparical method is using joint embedding, utilize the concatenate or element-wise product to joint image feature and question feature to same feature space.
 
 <div class="imgcap">
 <img src="/assets/vqa/vqaFramework.png">
 </div>
 
-### 2.1 Who first solve VQA?
+#### 2.1 Who first solve VQA?
 Malinovwski[[6]](#6), who comes from the Max-Planck Institute for Informations in German, firstly proposed a bayesian model to solve the vqa problem, combined symbolic reasoning and uncertain visual information. He was inspiring by semantic parsing work [[40]](#40), which learn to transform text into semantic tree, then get the final functional programing language, it will get output as answers. After that they proposed a cnn-lstm model for vqa in ICCV2015[[49]](#49).
 
-### 2.2 Multimodal Learning
+#### 2.2 Multimodal Learning
 Since the challenge of vqa is that it is the multimodal problem[[41]](#41), combining the feature of vision and question, then reasonning the answer. The multimodel problem have different sub-research fields, such as the image captioning, visual question answering and so on. It have a widely application, especially in scene understanding, which one of the key technique in autopilot(from MIT class: Deep learning for self-driving cars).   
 
-### 2.3 Image Captioning
+#### 2.3 Image Captioning
 After paper[[6]](#6) proposed the senmantic parsing method to solve the vqa question, a lot of researcher learn the performance from Neural Image Caption (NIU), because both of them belong to multimodal learning.  
 
 1. How the image captioning work?
@@ -41,17 +41,17 @@ The general approach to image captioning is the CNN-RNN model. It input a pre-tr
 
 	Replacing the encoder RNN by a deep convolution neural networt(CNN). Owning to CNNs can produce a rich representation of the input image by embedding it to a fixed-length vector, such that this representation can be used for a variety of vision task. This paper first pre-training it for an image classification task and using the last hidden layer as an input to the RNN decoder that generates sentences
 
-## 3 What is VQA Datasets?  
+### 3 What is VQA Datasets?  
 The VQA Datasets is build by the virginia Tech and Georgia Tech based on the mscoco datasets. Host by Devi Parikh, who CTO of FAIR and win the *Computer and Thought Award*, knowed as Fields Prize of AI.  
 the coco(Common Objects in COntext) dataset is builded by microsoft, which privide for image recognition. The coco image collect from Flickr, which a web sharing picture and vedio. coco search 80 categories of object with different scene in Flickr. Then divide into three parts: train sets, valuation set and test set.   
 the VQA-v1 include three type question: yes/no, number and other. However v1 is unbalanced, example as for the yes/no question, it can get a high performance answering with yes. So this v1 dataset exists some prior, make it unbalance.  
 In order to alleviate the unbalance problem, they public the VQA-v2 dataset, which two scales to v1. The size of v2 reach 650k question and answering pair, involve 120k different images. The most important is that the v2 dataset settle the unbalance problem with yes/no question devide half-and-half. Besides, the v2 ansure that for different image there will exist various answers for the same question.
 
-### 3.1 How the COCO data build?  
+#### 3.1 How the COCO data build?  
 the coco datasets build with the Amazon Mechanical Turk (abbr., AMT), it is a crowd-sourced progress, the work of AMT named as turker. They are freelance worker. However their work also comes free, which the crowded work public from all over the world, so its time is flexiable, it may public before dawn and end quickly.
 
 
-### 3.2 What in COCO data?
+#### 3.2 What in COCO data?
 download with two type file, one is images file which contain the Image infomation, the other contain is Annotations file, which contain the label information.
 
 - The Images file contain the iamges.
@@ -67,10 +67,10 @@ download with two type file, one is images file which contain the Image infomati
 
 
 --------------------------------------------------------------------------------------------------------------------------------
-# Chapter 2 Development of VQA
+## Chapter 2 Development of VQA
 
-## 2.1 The survey of VQA [[4]](#4),[[11]](#11),[[12]](#12)  
-### 2.1.1 VQA datasets  
+### 2.1 The survey of VQA [[4]](#4),[[11]](#11),[[12]](#12)  
+#### 2.1.1 VQA datasets  
 1. DAQUAR (DAtaset for QUestion Answering on Real-world images)[[6]](#6) the origin and minimium vqa datasets, image from NYU-DepthV2 Dataset. This dataset have poor quality, some image have low resolution, the question and answer have explicit gramma error.
 
 2. COCO-QA this dataset based on coco image, the question and answer builded by the NLP algorithm. This datasets contain training image 78736, test iamge 38948, including 69.84% target question, 16.59% color question, 7.74% counting question, 6.10% position question, all the answer is single word, which unique number is 435. because of generating question and answer by NLP, the grammar error is inevatable.
@@ -94,14 +94,14 @@ download with two type file, one is images file which contain the Image infomati
 
 11. VQA-CP (vqa changing prior) [[36]](#36) re-build the vqa dataset and make prior of train set and test set is different.   
 
-#### (a) vqa datasets comparison [[11]](#11)
+##### (a) vqa datasets comparison [[11]](#11)
 
 <div class="imgcap">
 <img src="/assets/vqa/datasets.png">
 <div class="thecap" style="text-align:center">diff datasets</div>
 </div>
 
-#### (b) "tail" of VQA datasets
+##### (b) "tail" of VQA datasets
 
 <div class="imgcap">
 <img src="/assets/vqa/longtail.png">
@@ -111,7 +111,7 @@ The curve of figure 5 [[4]](#4) is the answer frequeece, we can find that the Vi
 
 
 
-### 2.1.2  VQA Algorithm
+#### 2.1.2  VQA Algorithm
 
 <div class="imgcap">
 <img src="/assets/vqa/algorithm.png">
@@ -174,7 +174,7 @@ Using the question to break the VQA task into a series of sub-problems, then con
 6. **External Knowledges**  
 paper[[23]](#23),[[24]](#24) utilize the external information to get the prior of information, which is interpretable and traceable.
 
-### 2.1.3 **Evalution Metrics**  
+#### 2.1.3 **Evalution Metrics**  
 As we known any model performance is depend on its metrics. 
 1. simple accuracy  
 Just calculate which answer is right or not.
@@ -191,21 +191,21 @@ A new metric based on human consensus, it first compute the TF-IDF weight for n-
 4. Manual Evalution  
 yeah, manual..[[19]](#19)
 
-### 2.1.4 Application of VQA
+#### 2.1.4 Application of VQA
 1. help the visual impairement people
 2. image retrieve
 3. auto pilot
 
-### 2.1.5 Future of VQA
+#### 2.1.5 Future of VQA
 1. attention model
 2. bias of the datasets.
 3. how to reason
 4. Multi-choice & Open-ended
 
 --------------------------------------------------------------------------------------------------------------------------------
-# chapter 3 BigGun's Team
+## chapter 3 BigGun's Team
 
-## 3.1 [Chirstopher Kanan](https://chriskanan.com/). Christopher Kanan Team
+### 3.1 [Chirstopher Kanan](https://chriskanan.com/). Christopher Kanan Team
 Kanan's paper [[11]](#11): 《**An analysis of visual question answering algorithms**》
 this paper of Christopher Kanan [[11]](#11) have four contribute:  
 **Motivation**:  
@@ -223,7 +223,7 @@ The research of VQA devide into two camp, the image dataset learing the image un
 
 
 
-## 3.2 [Devi Parikh](https://www.cc.gatech.edu/~parikh/). The vqa development of the Deri Parikh team in Virginia Tech, it can found that.
+### 3.2 [Devi Parikh](https://www.cc.gatech.edu/~parikh/). The vqa development of the Deri Parikh team in Virginia Tech, it can found that.
 
 1. firstly, they proposed the vqa-v1 datasets, based on the mscoco datasets [[1]](#1). 
 
@@ -247,11 +247,11 @@ Motivation: most of the vqa models are heavily driven by superficial correlation
 <img src="/assets/vqa/gvqa.png">
 </div>
 
-## 3.4 [Feifei Li](http://vision.stanford.edu/people.html)
+### 3.4 [Feifei Li](http://vision.stanford.edu/people.html)
 In paper[[28]](#28) D Parikh analyse the characteristic of existing vqa model, besides the Yin and Yang[[2]](#2) argue that the balance important of vqa datasets. Based on both, Feifei's team take the clever hans as metaphor, they thought that the vqa didn't understand the image and question, they rely on the statistically favorable.
 
 
-## 3.3 [Qi Wu](http://www.qi-wu.me/). Qi Wu's team work [[12]](#12)
+### 3.3 [Qi Wu](http://www.qi-wu.me/). Qi Wu's team work [[12]](#12)
 1. The first motivation of Qi's Team proposed that it exists the context gap between the image and language feature, both should map to sub-space as the bridge, instead of connecting each other directly. They proposed the attribute of image as the common space to bridge both. their model predicts the attribute of image(these attr is generized, such as the object name, property, motivation, adjectinve and so on.), afterwards, these attribute will replace the image feature and input the RNN model, which will generate the language description of image.
 
 2. ACK(first show in wu's survey paper) The extracted image attribute work welll in image captioning and vqa. However vqa is diff from image captioning, because vqa requires more common sence. Inspiring by it, they assume that if they can expand the attribute space by introducing other common sence knowleges. So they combine the knowledges graph to vqa, which get a high pergormance in VQA datasets.(public in CVPR2016 **Ask Me Anything: Free-form Visual Question Answering Based on Knowledge from External Sources**[[23]](#23))
@@ -273,22 +273,22 @@ Based on these problem, they propsed a compositional vqa structure, called VQA M
 
 
 
-## 3.4 [Jun Yu](https://dblp.uni-trier.de/pers/hd/y/Yu_0002:Jun)  
+### 3.4 [Jun Yu](https://dblp.uni-trier.de/pers/hd/y/Yu_0002:Jun)  
 MFH (Multimodal Factorized High-order Pooling)[[42]](#42), CVPR 2019
 
 MCAN (Deep Modular Co-Attention Networks)[[21]](#21), CVPR 2019 6.
 
 
-## 3.5 [UNC NLP](http://nlp.cs.unc.edu/publications.html)  
+### 3.5 [UNC NLP](http://nlp.cs.unc.edu/publications.html)  
 LXMERT (Learning Cross-Modality Encoder Representations from Transformers) [[20]](#20), EMNLP 2019 8.
 
 
 
 
 -------------------------------------------------------------------------------------------------------------------------
-# chapter 4 Base method and SOTA
+## chapter 4 Base method and SOTA
 
-## 4.1 **Baseline of vqa**  
+### 4.1 **Baseline of vqa**  
 1. BOWIMG : Bag-of-word + image feature
 
 2. FDA : Focused Dynamic Attention model[[32]](#32)
@@ -315,7 +315,7 @@ using all the object proposed feature will induce too much noise or overwhelming
 5. MLB : multimodal low-rank bilinear pooling for vqa.
 
 
-## 4.2 Promising Model of Attention Machanism
+### 4.2 Promising Model of Attention Machanism
 1. SAN **Stacked Attention Networks for Image Question Answering** [[16]](#16) 2015  
 motivation: vqa required multiple steps of reasoning. So this paper develop a multiple-layer SAN where query an image get attention multiple times to infer the answer progressively.
 
@@ -336,16 +336,16 @@ The attention can be formulated as the marginal distribution of each hidden vari
 
 
 4. paper[[37]](#37) graph cnn  
-#TODO
+TODO
 
 5. DCN (dense co-attention network)[[52]](#52)
 It present a novel network architecture for VQA named the dense co-attention network. The core of the network is the dense co-attention layer, which is designed to enable improved fusion of visual and language representations by considering dense symmetric interactions between the input image and question. The layer can be stacked to perform multi-step image-question interactions.
 
 6. BAN (bilinear attention network)[[53]](#53)
-#TODO
+TODO
 
 
-## 4.3 State-Of-The-Art
+### 4.3 State-Of-The-Art
 1. MCAN (Deep Modular Co-Attention Networks)[[21]](#21), CVPR 2019 6.
 
 
@@ -358,7 +358,7 @@ previous research ignore the important role of answer.
 
 
 
-## 4.4 **Domestic Research**  
+### 4.4 **Domestic Research**  
 
 1. paper 《Are You Talking to a Machine? Dataset and Methods for Multilingual Image Question Answering》[[19]](#19) NIPS 2015, by Baidu Research. mQA model. Muanual valide the answer.
 
@@ -367,7 +367,7 @@ previous research ignore the important role of answer.
 
 --------------------------------------------------------------------------------------------------------------------------------------
 
-## **Reference**  
+### **Reference**  
 
 [[1]](https://arxiv.org/abs/1505.00468) VQA: Visual Question Answering, D Parikh (ICCV 2015)    
 [[2]](https://arxiv.org/abs/1511.05099) Yin and Yang: Balancing and Answering Binary Visual Questions,D Parikh (CVPR 2016)    
