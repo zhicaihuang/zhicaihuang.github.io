@@ -1,0 +1,63 @@
+---
+layout: post
+comments: False
+title: "LSTM-CRF for Named-Entity Recognition task"
+excerpt: "LSTM-CRF NER task"
+date:   2019-12-25 14:19:34
+mathjax: true
+---
+
+##  Named-Entity Recognition (NER)
+### 1 What is NER?
+Named-entity recognition (NER) (also known as entity identification, entity chunking and entity extraction) 
+is a subtask of information extraction that seeks to locate and classify named entity mentions 
+in unstructured text into pre-defined categories such as person names, organizations, 
+locations, medical codes, time expressions, quantities, monetary values, percentages, etc. [[1]](#1)
+NER is subfield of NLP and IR(information retrieve).
+
+### 2 Solution of NER
+There is many tools can be done with NER task, such as Spacy and Stanford NLP tool.
+In Stanford NLP tool, the NER recognizer realized by a linear-chain CRF model.
+The CRF model is conditional random field model, it is a sequential model, it can be seem as
+the evolution of tranditional HMM (hidden markov model), owing to it break the two basis markov hypothesis:
+- Observation independence
+- First-order Homogeneous Markov property
+
+Here we talking about how LSTM-CRF method to solve NER task. this paper mainly refer code of [PythonWorkshop](https://github.com/PythonWorkshop/intro-to-nlp-with-pytorch).
+He use the LSTM and CRF algorithm dealing the NER task.
+
+### 3 LSTM+CRF
+As we know, a traditional machine learning including two vital process: learning and inference.
+First, learning the model, then using learned model to inference the unseen data.
+#### 3.1 Learning
+CRF method need state transform information and emission information. but how can we get such stuff,
+the code shows that it use the LSTM model get the features of input sequence, and dimsion of feature is the same as tag size.
+example the tag containing B(egining), I(nside), O(utside), Start, End, five state, so the dimension LSTM output feature would be 5.
+These LSTM output feature would be seem as emission probability from state to observation data.
+
+For CRF, the other requisite information is state transform probability. 
+The code shows that this transform matrix is initialized randomly.
+In next step, it will learned with LSTM model.
+
+Finally, the most two information transform probability and emission probability are done, then with both, it can get the log-sum-exp of LSTM model, which as the measure method.
+the log-sum-exp can be seen as the denominator of softmax formula, which capture the global information of sequence feature.
+$$
+logSumExp(x_1,...,x_n)=log(\sum_{i=1}^n{e^{x_i}})
+$$
+
+
+
+#### 3.2 Inference
+Withou the CRF, the LSTM is able to solve NER task. It can calculate the maximun value of each observation then get the best state.
+However, the result sequece may not be reasonable. such as state squence O-I, which it is impossible happen.
+So utilize the CRF to constrain the global imformation for LSTM, so that make the state output reasonable.
+
+In infernce, the code apply Viterbi algorithm to get the best state sequence. 
+
+
+### Reference
+[1]. [WiKi of Named-entity recognition](https://en.wikipedia.org/wiki/Named-entity_recognition)
+
+
+
+
