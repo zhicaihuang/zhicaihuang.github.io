@@ -19,19 +19,19 @@ NER is subfield of NLP and IR(information retrieve).
 There is many tools can be done with NER task, such as Spacy and Stanford NLP tool.
 In Stanford NLP tool, the NER recognizer realized by a linear-chain CRF model.
 The CRF model is conditional random field model, it is a sequential model, it can be seem as
-the evolution of tranditional HMM (hidden markov model), owing to it break the two basis markov hypothesis:
+the evolution of traditional HMM (hidden markov model), owing to it break the two basis markov hypothesis:
+
 - Observation independence
 - First-order Homogeneous Markov property
 
-Here we talking about how LSTM-CRF method to solve NER task. this paper mainly refer code of [PythonWorkshop](https://github.com/PythonWorkshop/intro-to-nlp-with-pytorch).
-He use the LSTM and CRF algorithm dealing the NER task.
+Here we talking about how LSTM-CRF method to solve NER task. this paper mainly refer code of [PythonWorkshop](https://github.com/PythonWorkshop/intro-to-nlp-with-pytorch). It use the LSTM and CRF algorithm dealing the NER task.
 
 ### 3 LSTM+CRF
 As we know, a traditional machine learning including two vital process: learning and inference.
 First, learning the model, then using learned model to inference the unseen data.
 #### 3.1 Learning
 CRF method need state transform information and emission information. but how can we get such stuff,
-the code shows that it use the LSTM model get the features of input sequence, and dimsion of feature is the same as tag size.
+the code shows that it use the LSTM model get the features of input sequence, and dimension of feature is the same as tag size.
 example the tag containing B(egining), I(nside), O(utside), Start, End, five state, so the dimension LSTM output feature would be 5.
 These LSTM output feature would be seem as emission probability from state to observation data.
 
@@ -46,13 +46,12 @@ logSumExp(x_1,...,x_n)=log(\sum_{i=1}^n{e^{x_i}})
 $$
 
 
-
 #### 3.2 Inference
-Withou the CRF, the LSTM is able to solve NER task. It can calculate the maximun value of each observation then get the best state.
-However, the result sequece may not be reasonable. such as state squence O-I, which it is impossible happen.
-So utilize the CRF to constrain the global imformation for LSTM, so that make the state output reasonable.
+Without the CRF, the LSTM is able to solve NER task. It can calculate the maximum value of each observation then get the best state.
+However, the result sequence may not be reasonable. such as state sequence O-I, which it is impossible happen.
+So utilize the CRF to constrain the global information for LSTM, so that make the state output reasonable.
 
-In infernce, the code apply Viterbi algorithm to get the best state sequence. 
+In inference, the code apply Viterbi algorithm to get the best state sequence. 
 
 
 ### Reference
