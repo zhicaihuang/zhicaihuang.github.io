@@ -7,11 +7,11 @@ date:   2019-10-29 20:02:59
 mathjax: true
 ---
 
+## NLP
+NLP (natural language processing)
+
 ## CV 
 CV (Computer Vision)
-
-## NLP
-NLP (natural language processing) is about to rising!
 
 ## MML
 MML (Multi-modal Learnign)
