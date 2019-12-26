@@ -112,11 +112,3 @@ def _viterbi_decode(self, feats):
 [2] [pytorch tutorial: ADVANCED: MAKING DYNAMIC DECISIONS AND THE BI-LSTM CRF](https://pytorch.org/tutorials/beginner/nlp/advanced_tutorial.html#sphx-glr-beginner-nlp-advanced-tutorial-py)  
 [3] [pytorch lstm crf](https://blog.csdn.net/Jason__Liang/article/details/81772632)
 
-```mermaid
-graph TD;   
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
-```
-
