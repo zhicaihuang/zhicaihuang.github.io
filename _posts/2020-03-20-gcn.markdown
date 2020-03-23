@@ -511,9 +511,6 @@ $$
 
 where $\Theta \in \R^{C \times F}$ is filter parameters matrix, and $ Z \in \R^{N \times F} $ is convolved signal matrix.
 
-The filtering operation has complexity $\mathcal{O}(|\mathcal{E}| FC)$. as $\tilde{A} X$ can be efficiently implemented as a product of a sparse matrix with a dense matrix.
-
-
 
 ##### Pooling operation on GCN
 
