@@ -265,9 +265,7 @@ u_1(2) & u_2(2) & \cdots & u_N(2)\\
 \vdots & \vdots & \ddots & \vdots \\
 u_1(N) & u_2(N) & \cdots & u_N(N)\\
 \end{pmatrix}
-$$
 
-$$
 \begin{pmatrix}
 \hat{f}{\lambda_1} \\
 \hat{f}{\lambda_2} \\
@@ -511,7 +509,9 @@ $$
 Z= \tilde{D}^{-1/2}\tilde{A} \tilde{D}^{-1/2} X \Theta
 $$
 
-where $\Theta \in \R^{C \times F}$ is filter parameters matrix, and $Z \in \R^{N \times F}$ is convolved signal matrix. The filtering operation has complexity $\mathcal{O}(|\mathcal{E}|F C)$. as $\tilde{A}X$ can be efficiently implemented as a product of a sparse matrix with a dense matrix.
+where $\Theta \in \R^{C \times F}$ is filter parameters matrix, and $ Z \in \R^{N \times F} $ is convolved signal matrix.
+
+The filtering operation has complexity $\mathcal{O}(|\mathcal{E}| FC)$. as $\tilde{A} X$ can be efficiently implemented as a product of a sparse matrix with a dense matrix.
 
 
 
