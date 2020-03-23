@@ -317,9 +317,6 @@ $$
    \vdots & \vdots & \ddots & \vdots \\
    u^*_N(1) & u^*_N(2) & \cdots & u^*_N(N)\\
    \end{pmatrix}
-   $$
-
-   $$
    \begin{pmatrix}
    h(1)\\
    h(2)\\
@@ -459,21 +456,27 @@ $$
 $U$ is eigenvector matrix, which extracted from laplacian matrix. While $\Lambda$ is diagonal matrix of eigenvalue, $g_\theta(\Lambda)$ is convolution kernel. $x$ is input data, $\sigma$ is activation function.
 
 While for large graph, computing the eigendecomposition of $L$ would be expensive, to this end, suggested by Hammond [22] that $g_{\theta}(\Lambda)$ can be well-approximated by a truncated expansion in terms of Chebyshev polynomials $T_k(x)$ up to $K^{th}$ order.
+
 $$
 g_{\theta}(\Lambda) \approx \sum_{k=0}^{K} \theta_k T_k(\tilde{\Lambda})
 $$
+
 Since the input of Chebyshev polynomials limit to range [-1, 1], so it must rescale the $\Lambda$ to $\tilde{\Lambda}$, the detail is following:
+
 $$
 \tilde{\Lambda} = \frac{2 }{\lambda_{max}}\Lambda - I_N
 $$
+
 $I_N$ is indicate matrix, $\lambda_{max}$ represent the maximum eigenvalue of $L$. $\theta \in \R^K$ is a vector of Chebyshev coefficients.
 
 The Chebyshev polynomials are recursively defined as $T_k(x) = 2xT_{k-1}(x)-T_{k-2}(x)$, with $T_0(x)$=1 and $T_1(x)=x$. 
 
 Going back to the definition of convolution of a signal $x$ with a filter $g_{\theta}$, we have:
+
 $$
 g_{\theta} *x \approx \sum_{k=0}^{K} \theta_k T_k(\tilde{L} ) x
 $$
+
 with $\tilde{L} = \frac{2 }{\lambda_{max}} L - I_N$. While the $k$ represent a $K^{th}$-order polynomial in Laplacian. For simplify, we will set $k=1$ and the $\lambda \approx 2$. In term of it, we can get:
 
 $T_0(\tilde{L})=1$
@@ -481,25 +484,33 @@ $T_0(\tilde{L})=1$
 $T_1(\tilde{L})=\tilde{L} = L - I_N = D^{-1/2}AD^{-1/2}$, since $L=I_N-D^{-1/2}AD^{-1/2}$. 
 
 Based on above analysis, we have the approximation of graph convolution simplifiers to:
+
 $$
 g_{\theta}*x \approx \theta_0 x+ \theta_1(L-I_N)x=\theta_0x-\theta_1 D^{-1/2}AD^{-1/2} x
 $$
+
 In practice the two free parameters $\theta_0$ and $\theta_1$ would shared the same weight over the whole graph. So that we have
+
 $$
 \theta = \theta_1 = - \theta_2\\
 g_{\theta}*x \approx \theta (I_N + D^{-1/2}AD^{-1/2} )x
 $$
+
 However $I_N + D^{-1/2}AD^{-1/2}$ has eigenvalues in range of [0,2], Repeated application of this operator can therefore lead to numerical instabilities and exploding/vanishing gradients when used in a deep neural network model. To alleviate this problem, [22] introduce the following renormalization trick:
+
 $$
 I_N + D^{-1/2}AD^{-1/2} \to \tilde{D}^{-1/2} \tilde{A}\tilde{D}^{-1/2} \\
 \tilde{A}=A+I_N \\
 \tilde{D}_{ii}= \sum_j \tilde{A}_{ij}
 $$
+
 Finally, we can get the generation of graph convolution of signal $X \in \R^{N \times C}$ with $C$ input channels (i.e. a C-dimensional
 feature vector for every node) and F filters or feature maps as follows:
+
 $$
 Z= \tilde{D}^{-1/2}\tilde{A} \tilde{D}^{-1/2} X \Theta
 $$
+
 where $\Theta \in \R^{C \times F}$ is filter parameters matrix, and $Z \in \R^{N \times F}$ is convolved signal matrix. The filtering operation has complexity $\mathcal{O}(|\mathcal{E}|F C)$. as $\tilde{A}X$ can be efficiently implemented as a product of a sparse matrix with a dense matrix.
 
 
