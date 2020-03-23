@@ -1,0 +1,513 @@
+---
+layout: post
+comments: False
+title: "Graph Neural Network"
+excerpt: "graph convolutional network"
+date:   2020-03-23 08:58:15
+mathjax: true
+---
+
+## Graph Neural Network
+### Graph signal processing
+#### Euclidean and non Euclidean data
+Generally, processing digitally sampling natural signal leads to its representation as the sum of Delta functions in space or time [12].
+
+**Process on regular Euclidean space**  
+There are many method can represent different classes of high-dimensional data such as audio signals and images that lie on regular Euclidean space [4]:
+- time-frequency, FFT
+- wavelet
+- curvelet (FFT+wavelet)
+- other localized transform
+
+**Process on irregular non Euclidean space**   
+For non Euclidean data, the graph theory offer a excellent performance to processing it.
+
+### Graph Theory
+#### Laplacian matrix
+For graph $G=(V,E)$, the definition of Laplacian matrix L is $L = D - A$. While D is degree matrix of corresponding vertex, A is adjacent matrix.
+
+It is notice that there are three type Laplacian matrix format in actually [15]:
+1. Above definition Laplacian matrix $L= D-A$, also named as Combinatorial Laplacian.
+2. Sometimes it need a symmetric form to calculation, that is $L^{sys} = D^{-1/2} L D^{-1/2}$, many expression employ it. This expression also known as Symmetric normalized Laplacian matrix.
+3. Random walk normilized Laplacian expression $L^{rw} = D^{-1}L$.
+
+**Why need Laplacian matrix?**
+
+1. The Laplacian matrix is symmetric matrix, which is able to feature decomposition (or spectral decomposition), It is basis theory of GCN, meanwhile it is the major difference comparing to spatial domain.
+2. The key point of Laplacian is the diagonal value of matrix. Because in symmetric normalized Laplacian matrix, the normalized matrix is $D^{-1}$ is diagonal matrix, it just calculate the diagonal value. In essential, the true meaning of Laplacian matrix is focus on neighbor vertex and exclude the vertex itself [16].
+
+
+#### Similarity matrix of graph
+Similarity of nodes decide by weight of edges, the common methods is consine similarity and Gaussian similarity. The larger the distance, the less the similarity.
+
+1. Cosine similarity
+$$
+sim(X,Y) = cos \theta = \frac{\vec{x} \cdot \vec{y} }{\| x\| \cdot \|y\|}
+$$
+
+2. Gaussian similarity
+$$
+sim(X,Y)=exp(\frac{-\|x_i - x_j \| ^2}{2 \delta ^2})
+$$
+
+#### Laplacian matrix spectral decomposition
+Because Laplacian matrix is positive semidefinite symmetrical matrix,
+so it have many special feature decomposition properties [17].
+
+The spectral decomposition of Laplacian matrix is:
+$$
+L = U
+\begin{pmatrix}
+\lambda_1 \\
+& \ddots & \\
+& & \lambda_n
+\end{pmatrix}
+U^{-1}
+$$
+
+While the $U=(\overrightarrow{u_1}, \overrightarrow{u_2},\cdots,\overrightarrow{u_n} )$ is unit eigenvector matrix, the $\overrightarrow{u_1}$ is column vector. It is notice that the $U$ is orthogonal matrix since the $L$ is positive semidefinite symmetrical matrix, thus it has $U U^{-1} = U U^T=E$ and $U^{-1}=U^T$.
+$$
+\begin{pmatrix}
+\lambda_1 \\
+& \ddots & \\
+& & \lambda_n
+\end{pmatrix}
+$$
+This diagonal matrix is consist of corresponding eigenvalues.
+
+### Spectral clustering
+#### Introduction of spectral clustering
+spectral clustering is also called graph clustering. The clustering task goal is given data points $X_1, ..., X_n$ and similarities $W(X_i,X_j)$, partition the data into groups so that points in a group are similar and points in different groups are dissimilar [11].
+
+Spectral clustering is a competitive method in clustering task, it based on graph theory, which ia able to process arbitary data format.
+The spectral clustering have wide application in our lives, such as data mining, image segmentation, video segmentation and speech recognition. 
+
+Generally spectral clustering is treated as graph cutting problem, in essentially, it finding the optimal cutting path of graph.
+
+There have many approach to clustering data based on graph theory:
+- Minimum cut [5]
+- Normalized cut [6]
+- Ratio cut [8,9]
+- Min-max cut [7]
+	* principle: more similarity in the same group, less similarity in different group.
+	* Optimize both condition simutaneously
+- Average cut
+- Isoperimetric ratio cut
+
+[spectral clustering](https://blog.csdn.net/aspirinvagrant/article/details/41700025)
+
+#### graph cut theory
+TODO
+
+
+#### Trend
+Spectral clustering just commence their shows, it still have lots of problem to research, as following:
+- How to choose appropriate similarity matrix, it directly affect the performance of clustering
+- Most of reality data is unlabeled data, it may contain few label data, it would be a funny thing to leverage label data to improving clustering performance.
+- Time complexity of graph clustering is high, how to reduct it.
+- How to determining the cluster number K automatically.
+
+
+### Graph Convolutional Network
+#### Type of Graph Convolution
+We have talking about convolution in [post](https://zhicaihuang.github.io/2019/10/10/conv/), so what is convolution, more concretely, what is discrete convolution?  
+In essential, the discrete convolution is weighted sum process. It can trace back to sparse representation learning [12].
+
+**Data structure**:  
+The convolution had proved work well in computer vision, in which the data is euclidean structure,
+such as the image, video and speech signal.
+while most of the reality data is non euclidean structure, 
+such as social networks, molecule graph, knowledge graph or word embedding.
+
+The transform model in NLP can be treat as a Graph network. In encode part, each word connect to every words of its context.
+In decode part, the decode token required previous information, which connecting to previous nodes. 
+Generally, the encode part and decode part is totally bi-partial graph.
+
+Besides the semtiment anaylysis based on sentence parse tree is graph network as well.
+
+**Feature extraction**:  
+For these non euclidean data, the graph convolution operation offers a effective way to extracting feature.
+
+The graph convolution is different from classical convolution, since the graph unable to applying a fixed convolution kernel. However, it can analyze the graph in a general view: topological connection. The topological connection is a generalized data structure, the idea of topological connection had achieved success in spectral clustering [13].
+It is notice that the spectral clustering is the basis theory of graph convolution network, so recommend reading spectral clustering first.
+
+We had known that graph convolution is message aggregating, it has two path to aggregate message: spatial domain and spectral domain(frequence domain). This post will mainly focus on spectral domain graph convolution.
+
+1. Spatial domain
+The idea of spatial domain is simply, extracting spatial feature by aggregating information from its adjacent point.
+paper [14] employ such idea to extract graph feature.
+However comparing with spectral domain, the spatial domain methods have poor performance.
+
+2. Spectral domain
+Now it is show time for GCN in spectral domain, in brief, following GCN represents convolution with spectral decomposition. Although traditional CNN and GCN have different application field, both have the same convolution idea, in which come from Fourier Transform. Thus it must commence the story from Fourier Transform.
+
+#### From Fourier Transform to Graph Convolution
+##### Classical Fourier Transform (FT)
+
+The Classical definition of Fourier Transform is:
+$$
+F(\omega) = \mathcal{F}[f[t]]= \int f(t) e^{-i \omega t} dt
+$$
+Intuitively, the Fourier Transform is integrate of signal $f(t)$ and basis function $e^{-i \omega t}$.
+
+**What is Fourier Transform?**
+
+Fourier transform comes from digital signal processing, which transform the temporal signal to frequent signal, because many reality signal is easy process in frequent space than temporal space.
+
+In essential, the Fourier transform is **axis transform**. For example, a $N$ dimension discrete temporal signal $f \in \mathcal{R}^{N \times N}$, take out one vector $f_n \in \mathcal{R}^N$, it has $N$ units $f_n=(f_n(1),f_n(2),\cdots,f_n(N))$, while corresponding axis (basis) is $(v_n(1),v_n(2),\cdots,v_n(N))$. Employing Fourier transform on this signal vector, it can yield a weight value on new axis in frequent space, calculate by following:
+$$
+\mathcal{F}(f_n)=\sum_{i=1}^{N}f(i) v^*_n(i)
+$$
+In real number range, the $v^*_n(i)$ and $v_n(i)$ are often orthogonal vector, which their inner product $v_n^*(i) \cdot v_n(i) = 1$, normally, this expression $v^*_n(i) \cdot v_n(i)$ is written as $u_n(i)$, representing n-th eigenvector after transforming project how many value on origin $i$ basis.
+
+It can intuitively sense that Fourier transform first map **all** temporal space weight to **one** new frequent space basis, then sum all projection weight together, the result is new weight in frequent space. But it is just one vector $f_n$, for all signal $f$, after transforming, it can yield a sequence since it is discrete. 
+
+**What is basis function $e^{i \omega t}$ means?**
+
+We known that general feature function is:
+$$
+A V= \lambda V
+$$
+While $A$ is a transform, $V$ is eigenvector or eigenfunction (for infinite vectors), $\lambda$ is eigenvalue. 
+
+Then it is well know that Laplace' transform $\Delta$ is second order differential operator, its expression as following:
+$$
+\Delta= \sum_{i=1}^{n} \frac{\part^2}{\part x_i^2}
+$$
+So that is $A$ is Laplace's transform, $V$ is expression $e^{-i \omega t}$, employing both variate in above feature function, we can yield:
+$$
+\Delta e^{-i \omega t}= -\omega ^2 e^{-i \omega t}
+$$
+From this transform, it is easy to see that it satisfy the feature function, which the eigenfunction is $e^{-i\omega t}$ and the eigenvalue is relevant with $\omega$. 
+
+##### Graph Fourier Transform
+
+We had a basic comprehension about Fourier transform, now let's talk about how Fourier transform works in graph. Comparing to the definition of Fourier transform, the graph Fourier transform can be construct as following:
+$$
+F(\lambda_l) = \hat{f}(\lambda_l) = \sum_{i=1}^{N} f(i) u^*_l(i)
+$$
+This expression is similar as aforementioned Fourier transform comprehension. $f$ is N dimension vector, while N represent $N$ vertex in graph. $f(i)$ is element of vector $f$. And $\lambda_l$ is eigenvalue, $u_l(i)$ is i-th component in eigenvector $l$, the $u^*_l(i)$ is conjugate vector of $u_l(i)$.
+
+We've discussed graph Fourier transform on vector above, then generalized it to matrix:
+$$
+\begin{pmatrix}
+\hat{f}{\lambda_1} \\
+\hat{f}{\lambda_2} \\
+\vdots \\
+\hat{f}{\lambda_N} 
+\end{pmatrix}
+= 
+\begin{pmatrix}
+u_1(1) & u_1(2) & \cdots & u_1(N)\\
+u_2(1) & u_2(2) & \cdots & u_2(N)\\
+\vdots & \vdots & \ddots & \vdots \\
+u_N(1) & u_N(2) & \cdots & u_N(N)\\
+\end{pmatrix}
+
+\begin{pmatrix}
+f(1)\\
+f(2)\\
+\vdots \\
+f(N)
+\end{pmatrix}
+$$
+As brief, Fourier transform on graph signal $f$ is: 
+$$
+\hat{f} = U^T f
+$$
+While $U^T$ is transform matrix, the same as eigenvector in spectral decomposition.
+
+##### Graph Inverse Fourier Transform
+
+In classical signal processing, a signal transform to a frequent domain, then it have to transform to time domain, and this procedure is called inverse Fourier transform. The definition of traditional inverse Fourier transform is:
+$$
+\mathcal{F}^{-1}[\mathcal{F}(\omega)] = \frac{1}{2 \pi} \int F(\omega) e^{i \omega t} d\omega
+$$
+Offering the same idea, we are able to expressing the Inverse Fourier Transform on graph vector signal as following:
+$$
+f(i) = \sum_{i=0}^{N} \hat{f}(\lambda_l)u_l(i)
+$$
+Then generalized it to matrix:
+$$
+\begin{pmatrix}
+f(1)\\
+f(2)\\
+\vdots \\
+f(N)
+\end{pmatrix}
+= 
+\begin{pmatrix}
+u_1(1) & u_2(1) & \cdots & u_N(1)\\
+u_1(2) & u_2(2) & \cdots & u_N(2)\\
+\vdots & \vdots & \ddots & \vdots \\
+u_1(N) & u_2(N) & \cdots & u_N(N)\\
+\end{pmatrix}
+
+\begin{pmatrix}
+\hat{f}{\lambda_1} \\
+\hat{f}{\lambda_2} \\
+\vdots \\
+\hat{f}{\lambda_N} 
+\end{pmatrix}
+$$
+So that, the Graph Inverse Fourier transform is as following, while $U$ is eigenvector. 
+$$
+f=U \hat{f}
+$$
+
+##### Graph Convolution
+
+Now it is clear that how to calculate graph Fourier transform. Based on it, let's definite the graph convolution.
+
+Convolution Theorem: two function signal $f(t)$ and $h(t)$ with convolution $f(t)*h(t)$, this convolution result is equal to inverse Fourier transform of Fourier transform on $f(t)$ times Fourier transform on $h(t)$, it can express as following:
+$$
+f*h = \mathcal{F}^{-1}[\hat{f}(\omega)\hat{h}(\omega)]= \frac{1}{2 \Pi} 
+\int\hat{f}(\omega)\hat{h}(\omega)e^{i\omega t} d\omega
+$$
+In case of graph convolution, the $f(t)$ is graph signal and $h(t)$ is convolution kernel. Let's analyze their FT.
+
+1. For graph signal $f(t)$, its FT $\hat{f}(t)$ is:
+
+$$
+\hat{f}=U^Tf
+$$
+
+2. For convolution kernel $h(t)$, its FT $\hat{h}(t)$ is:
+   $$
+   \begin{pmatrix}
+   \hat{h}{\lambda_1} \\
+   \hat{h}{\lambda_2} \\
+   \vdots \\
+   \hat{h}{\lambda_N} 
+   \end{pmatrix}
+   = 
+   \begin{pmatrix}
+   u^*_1(1) & u^*_1(2) & \cdots & u^*_1(N)\\
+   u^*_2(1) & u^*_2(2) & \cdots & u^*_2(N)\\
+   \vdots & \vdots & \ddots & \vdots \\
+   u^*_N(1) & u^*_N(2) & \cdots & u^*_N(N)\\
+   \end{pmatrix}
+   
+   \begin{pmatrix}
+   h(1)\\
+   h(2)\\
+   \vdots \\
+   h(N)
+   \end{pmatrix}
+   $$
+   In order to later deep learning analysis, this formulation will rewrite as:
+   $$
+   \begin{pmatrix}
+   \hat{h}(\lambda_1) \\
+   & \ddots & \\
+   & & \hat{h}(\lambda_N)
+   \end{pmatrix}
+   $$
+   while the $\hat{h}(\lambda_1)$ is:
+   $$
+   \hat{h}(\lambda_1) = \sum_{i=1}^N h(i)u^*_l(i)
+   $$
+
+Thereby, the final convolution expression is:
+$$
+(f*h)_G = U 
+\begin{pmatrix}
+\hat{h}(\lambda_1) \\
+& \ddots & \\
+& & \hat{h}(\lambda_N)
+\end{pmatrix}
+U^T f
+$$
+The $U$ is eigenvector of spectral decomposition.
+
+It is Notice that in many paper above convolution is following, the $\odot$ is Hadamard product:
+$$
+(f*h)_G= U( (U^T h) \odot (U^Th) )
+$$
+
+
+#### Deep learning GCN
+##### Clear our target
+
+In classical CNN network, we want to find all the network parameters with gradient back propagation, especially the variants of convolution kernel. While the parameters also the key point what we need in graph convolution networks.
+
+Based above study, it is easy understand the convolution kernel $h(t)$ is what we required, i.e. $diag(\hat{h}(\lambda_l))$.
+
+The continue research will commence with various path to tackle the convolution kernel $diag(\hat{h}(\lambda_l))$.
+
+##### Direct learning
+
+LeCun [3] directly replace the $diag(\hat{h}(\lambda_l))$ with convolution kernel $diag(\theta_l)$, that is:
+$$
+diag(\theta_l) = 
+\begin{pmatrix}
+\theta_1 & & \\
+& \ddots& \\
+& & \theta_n
+\end{pmatrix}
+$$
+For convenience, the $diag(\theta_l)$ named $g_{\theta}(\Lambda)$, thus the expression of GCN is following:
+$$
+y = \delta(U g_{\theta}(\Lambda)U^T x)
+$$
+In this expression, the $\delta$ is activation function, $x$ is feature vector corresponding with each vertex of graph. However this approach required plenty calculation owing to the product of $U$, $diag(\theta_l)$ and $U^T$, as well as it lacks of spatial localization.
+
+##### Localized Spectral filtering
+
+Defferrard [1] proposed a fast localized spectral filtering method for GCN. He designed the $\hat{h}(\lambda_l)$ with $\sum_{i=0}^K \alpha_i \lambda_l^i$, which is relevant with eigenvalue $\lambda$. This is skillful because we can take advantage of Laplcian matrix to reduce the calculation. Let's study them, we know that GCN is:
+$$
+y = \delta(U g_{\theta}(\Lambda)U^T x)
+$$
+Then we replace the convolution kernel:
+$$
+g_{\theta}(\Lambda) = 
+\begin{pmatrix}
+\sum_{i=0}^K \alpha_i \lambda_1^i & & \\
+& \ddots & \\
+& & \sum_{i=0}^K \alpha_i \lambda_n^i
+\end{pmatrix}
+= \sum_{i=0}^K \alpha_i \Lambda^i
+$$
+Go a step further study:
+$$
+y = \delta(U g_{\theta}(\Lambda)U^T x)=\delta(U \sum_{i=0}^K \alpha_i \Lambda^i U^T x)=
+\delta( \sum_{i=0}^N \alpha_i U \Lambda^i U^T x) =
+\delta( \sum_{i=0}^N \alpha_i L^i x)
+$$
+While $U$ and $U^T$ is eigenvector, and $U U^T=E$.
+
+It is notice that the parameter $K$, it represent the number of kernel. generally, it is less than $N$ vertex. so the calculation is decreasing significantly. Not only the calculation reducing, the $K$ is receptive field similar with CNN, which exist a better spatial localization performance. BUT, I still do not understand how this receptive field work, TODO here. The other sides, we employ the Laplacian matrix here, which doesn't required the spectral decomposition.
+
+##### GCN expression
+
+There is a precisely expression for GCN
+$$
+X_{n+1} = \sigma(\sum_i^k L_k X_n W)
+$$
+While the $X \in \Re^{N}$ is input data, $N$ stands graph have N nodes. $L \in \mathcal{R}^{N \times N}$ is Laplace matrix, represent for the information of graph. Both variables is input of network. $W$ is weight matrix, $\sigma$ is activation function.
+
+#### Spectral Graph Convolution of Chebyshev polynomial
+
+##### Fast Localized Spectral Filtering
+**Polynomial parametrization for localized filters.**:  
+Localized filters
+
+**Recursive formulation for fast filtering**:  
+reduce the graph complexity.  
+
+1. Chebyshev Polynomial [21] 
+2. Lanczos Methods [20]
+
+##### Chebyshev polynomial as the convolution kernel of GCN
+GCN have following expression:
+$$
+y = \sigma( U g_\theta( \Lambda) U^T x)
+$$
+
+$U$ is eigenvector matrix, which extracted from laplacian matrix. While $\Lambda$ is diagonal matrix of eigenvalue, $g_\theta(\Lambda)$ is convolution kernel. $x$ is input data, $\sigma$ is activation function.
+
+While for large graph, computing the eigendecomposition of $L$ would be expensive, to this end, suggested by Hammond [22] that $g_{\theta}(\Lambda)$ can be well-approximated by a truncated expansion in terms of Chebyshev polynomials $T_k(x)$ up to $K^{th}$ order.
+$$
+g_{\theta}(\Lambda) \approx \sum_{k=0}^{K} \theta_k T_k(\tilde{\Lambda})
+$$
+Since the input of Chebyshev polynomials limit to range [-1, 1], so it must rescale the $\Lambda$ to $\tilde{\Lambda}$, the detail is following:
+$$
+\tilde{\Lambda} = \frac{2 }{\lambda_{max}}\Lambda - I_N
+$$
+$I_N$ is indicate matrix, $\lambda_{max}$ represent the maximum eigenvalue of $L$. $\theta \in \R^K$ is a vector of Chebyshev coefficients.
+
+The Chebyshev polynomials are recursively defined as $T_k(x) = 2xT_{k-1}(x)-T_{k-2}(x)$, with $T_0(x)$=1 and $T_1(x)=x$. 
+
+Going back to the definition of convolution of a signal $x$ with a filter $g_{\theta}$, we have:
+$$
+g_{\theta} *x \approx \sum_{k=0}^{K} \theta_k T_k(\tilde{L} ) x
+$$
+with $\tilde{L} = \frac{2 }{\lambda_{max}} L - I_N$. While the $k$ represent a $K^{th}$-order polynomial in Laplacian. For simplify, we will set $k=1$ and the $\lambda \approx 2$. In term of it, we can get:
+
+$T_0(\tilde{L})=1$
+
+$T_1(\tilde{L})=\tilde{L} = L - I_N = D^{-1/2}AD^{-1/2}$, since $L=I_N-D^{-1/2}AD^{-1/2}$. 
+
+Based on above analysis, we have the approximation of graph convolution simplifiers to:
+$$
+g_{\theta}*x \approx \theta_0 x+ \theta_1(L-I_N)x=\theta_0x-\theta_1 D^{-1/2}AD^{-1/2} x
+$$
+In practice the two free parameters $\theta_0$ and $\theta_1$ would shared the same weight over the whole graph. So that we have
+$$
+\theta = \theta_1 = - \theta_2\\
+g_{\theta}*x \approx \theta (I_N + D^{-1/2}AD^{-1/2} )x
+$$
+However $I_N + D^{-1/2}AD^{-1/2}$ has eigenvalues in range of [0,2], Repeated application of this operator can therefore lead to numerical instabilities and exploding/vanishing gradients when used in a deep neural network model. To alleviate this problem, [22] introduce the following renormalization trick:
+$$
+I_N + D^{-1/2}AD^{-1/2} \to \tilde{D}^{-1/2} \tilde{A}\tilde{D}^{-1/2} \\
+\tilde{A}=A+I_N \\
+\tilde{D}_{ii}= \sum_j \tilde{A}_{ij}
+$$
+Finally, we can get the generation of graph convolution of signal $X \in \R^{N \times C}$ with $C$ input channels (i.e. a C-dimensional
+feature vector for every node) and F filters or feature maps as follows:
+$$
+Z= \tilde{D}^{-1/2}\tilde{A} \tilde{D}^{-1/2} X \Theta
+$$
+where $\Theta \in \R^{C \times F}$ is filter parameters matrix, and $Z \in \R^{N \times F}$ is convolved signal matrix. The filtering operation has complexity $\mathcal{O}(|\mathcal{E}|F C)$. as $\tilde{A}X$ can be efficiently implemented as a product of a sparse matrix with a dense matrix.
+
+
+
+##### Pooling operation on GCN
+
+Duvenaud [2] modeled graph-level outputs by introducing some form of pooling operation.
+
+paper [4] discuss different ways to define graph spectral domains
+- the analogues to the classical frequency domain
+- highlight the importance of incorporating the irregular structures of graph data domains when processing signals on graphs.
+
+then review methods to generalize fundamental operations such as
+- filtering, translation, modulation, dilation, and downsampling to the graph setting
+- survey the localized, multiscale transforms that have been proposed to efficiently extract information from high-dimensional data on graphs.
+
+### Graph Application
+#### Graph Neural Network
+In essentially, many neural networks  model parsing message by aggregating information from other connected nodes,
+then calculating new representation of this node.
+
+**deep learning for graph**:  
+Traditional deep learning graph works based on tensor, while many graph network often represent by uncomplete tensor,
+which tensor is sparsly with 0. It is bad for calculation.
+
+Thus many graph specify deep learning tool appear in cv, for example, the DGL(deep graph Library).
+
+- DGL is open source framework for graph signal process, which developed by NYU(NewYork University) and AWS.
+- PyG (PyTorch Geometric) 
+
+#### Readout operation
+generate discriptor for graph.
+
+
+### Reference
+[1] Convolutional Neural Networks on Graphs with Fast Localized Spectral Filtering, NIPS16, Defferrard 
+[2] Convolutional Networks on Graphs for Learning Molecular Fingerprints, NIPS15, Duvenaud et al.
+[3] Spectral Networks and Locally Connected Networks on Graphs, 2014, Joan Bruna
+[4] The Emerging Field of Signal Processing on Graphs: Extending High-Dimensional Data Analysis to Networks and Other Irregular Domains, IEEE Signal Processing Magazine 2013
+2012, David I Shuman. 
+[5] An optimal graph theoretic approach to data clustering: theory and its application to image segmentation, TPAMI93, Wu Z, Leahy R
+[6] Normalized cuts and image segmentation, CVPR97 & TPAMI2000, Jianbo shi, Malik J
+[7] A Min-max Cut Algorithm for Graph Partitioning and Data Clustering, ICDM2001, Chris H. Q. Ding，Xiaofeng He
+[8] Image Segmentation with Minimum Mean Cut, ICCV01, Song Wang, Siskind J M.
+[9] Image Segmentation with Ratio Cut, TPAMI03, Song Wang, Siskind J M.
+[10] Learning Spectral Clustering, NIPS03, Francis R. Bach, Michael I. Jordan
+[11] [spectral clustering, CMU](https://www.cs.cmu.edu/~aarti/Class/10701/slides/Lecture21_2.pdf)
+[12] Dictionaries for Sparse Representation Modeling, IEEE2010, Ron Rubinstein
+[13] [Pinciple of spectral clustering Blog](https://www.cnblogs.com/pinard/p/6221564.html)
+[14] Learning Convolutional Neural Networks for Graphs, ICML16, Mathias Niepert
+[15] [Laplacian matrix on wiki](https://en.wikipedia.org/wiki/Laplacian_matrix)
+[16] [Vedio of spectral clustering](https://www.bilibili.com/video/av37166049)
+[17] [positive semidefinite matrix](https://en.wikipedia.org/wiki/Definiteness_of_a_matrix)
+[18] [how to understand the GCN](https://www.zhihu.com/question/54504471)
+[19] [Vedio of Fourier Transform](https://www.bilibili.com/video/av19141078)
+[20] Accelerated filtering on graphs using Lanczos method, Mathematics - Numerical Analysis 2015, Ana
+[21] Wavelets on Graphs via Spectral Graph Theory, Functional Analysis (math.FA)2009, David K Hammond
+[22] Semi-Supervised Classification with Graph Convolutional Networks
+
+
+
+
+
